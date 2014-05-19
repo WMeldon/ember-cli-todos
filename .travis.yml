@@ -3,4 +3,5 @@ node_js:
   - 0.10
 before_script:
   - npm install -g bower
+  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - bower install
