@@ -8,29 +8,27 @@ moduleFor('route:todos', 'Unit - TodoRoute', {
   }
 });
 
+console.log(test);
 test('it exists', function(){
-  expect(2);
   var route = this.subject();
 
-  ok(route);
-  ok(route instanceof Ember.Route);
+  route.should.be.ok;
+  route.should.be.an.instanceof(Ember.Route);
 });
 
 test('#model', function(){
-  expect(2);
   var route = this.subject();
-
   var expectedModel = {
     id: '1',
     title: 'install EAK',
     isCompleted: true
   };
 
-  route.store.find = function(type) {
-    equal(type, 'todo');
-
+  route.store.find = sinon.spy(function(type) {
     return expectedModel;
-  };
+  });
 
-  equal(route.model(), expectedModel, 'did not correctly invoke store');
+  route.model().should.eql(expectedModel);
+  route.store.find.calledOnce.should.be.ok;
+  route.store.find.calledWith('todo').should.be.ok;
 });

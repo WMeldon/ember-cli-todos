@@ -3,7 +3,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 moduleForComponent('edit-todo');
 
 test("asdf", function(){
-  ok(this.subject() instanceof Ember.Component);
-  ok(this.$().is('input'), 'is an input');
-  ok(this.$().is('.focus'), 'is in focus');
+  this.subject().should.be.an.instanceof(Ember.Component);
+  this.$().is('input').should.be.ok;
+  this.$().is('.focus').should.be.ok;
 });

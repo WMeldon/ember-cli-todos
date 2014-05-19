@@ -1,18 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
 var todo;
-moduleFor('controller:todos/item-controller', 'Unit - TodoController', {
-  needs: ['controller:todos'],
-  subject: function(options, factory) {
-    todo = mockTodo({
-      isCompleted: true
-    });
-
-    return factory.create({
-      model: todo
-    });
-  }
-});
 
 function mock(properties) {
   return Ember.Object.create(properties || {});
@@ -28,63 +16,78 @@ function mockTodo(properties) {
   return m;
 }
 
+moduleFor('controller:todos/item-controller', 'Unit - TodoController', {
+  needs: ['controller:todos'],
+  subject: function(options, factory) {
+    todo = mockTodo({
+      isCompleted: true
+    });
+
+    return factory.create({
+      model: todo
+    });
+  }
+});
+
 test('isCompleted: get', function(){
   var controller = this.subject();
-  equal(controller.get('isCompleted'), true);
+
+  controller.get('isCompleted').should.be.true;
 
   todo.set('isCompleted', false);
 
-  equal(controller.get('isCompleted'), false);
+  controller.get('isCompleted').should.be.false;
 });
 
 test('isCompleted: set', function(){
   var controller = this.subject();
 
-  equal(controller.get('isCompleted'), true);
-  equal(todo.get('isCompleted'), true);
+  controller.get('isCompleted').should.be.true;
+  todo.get('isCompleted').should.be.true;
 
   controller.set('isCompleted', false);
 
-  equal(controller.get('isCompleted'), false);
-  equal(todo.get('isCompleted'), false);
+  controller.get('isCompleted').should.be.false;
+  todo.get('isCompleted').should.be.false;
 });
 
 test('actions: editTodo', function(){
   var controller = this.subject();
 
-  equal(todo.get('isEditing', false));
+  controller.get('isEditing').should.be.false;
+
   controller.send('editTodo');
-  equal(todo.get('isEditing', true));
+
+  controller.get('isEditing').should.be.true;
 });
 
 test('actions: removeTodo', function(){
-  expect(2);
 
   var controller = this.subject();
 
-  todo.deleteRecord = function() {
-    ok(true, 'expected Record#deleteRecord');
-  };
+  todo.deleteRecord = sinon.spy();
 
-  todo.save = function() {
-    ok(true, 'expected Record#save');
-  };
+  todo.save = sinon.spy();
 
   controller.send('removeTodo');
+
+  todo.deleteRecord.calledOnce.should.be.true;
+  todo.save.calledOnce.should.be.true;
+  todo.deleteRecord.calledBefore(todo.save).should.be.true;
+
 });
 
 test('actions: acceptChanges', function(){
-  expect(3);
 
   var controller = this.subject();
 
-  todo.save = function() {
-    ok(true, 'expected Record#save');
-  };
+  todo.save = sinon.spy();
 
-  equal(todo.get('isEditing', true));
+  controller.set('isEditing', true);
   controller.send('acceptChanges');
-  equal(todo.get('isEditing', false));
+  controller.get('isEditing').should.be.false;
+  todo.save.calledOnce.should.be.true;
+
 });
 
 moduleFor('controller:todos/item-controller', 'Unit - TodoController with multiple todos', {
@@ -119,13 +122,14 @@ moduleFor('controller:todos/item-controller', 'Unit - TodoController with multip
 
 test('isLastRemaining', function () {
   var controller = this.subject();
-  equal(this.todosController().get('length'), 2, "There are initially 2 todos");
-  equal(this.todosController().get('active.length'), 1, "Only one todo is active");
-  equal(controller.get('isCompleted'), false, "The todo is initially active");
-  equal(controller.get('isLastRemaining'), true, "todo is initially the last remaining one");
+
+  this.todosController().get('length').should.equal(2);
+  this.todosController().get('active.length').should.equal(1);
+  controller.get('isCompleted').should.be.false;
+  controller.get('isLastRemaining').should.be.true;
 
   controller.set('isCompleted', true);
 
-  equal(todo.get('isCompleted'), true, "todo is now complete");
-  equal(controller.get('isLastRemaining'), false, "todo is no longer the last remaining one");
+  todo.get('isCompleted').should.be.true;
+  controller.get('isLastRemaining').should.be.false;
 });

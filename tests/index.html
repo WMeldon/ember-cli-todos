@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="assets/vendor.css">
     <link rel="stylesheet" href="assets/todos.css">
-    <link rel="stylesheet" href="assets/qunit.css">
+    <link rel="stylesheet" href="assets/mocha.css">
     <style>
       #ember-testing-container {
         position: absolute;
@@ -45,19 +45,23 @@
     </style>
   </head>
   <body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
+    <div id="mocha"></div>
     <div id="hide-testing-container">Hide</div>
 
     <script>
       window.ENV = {{ENV}};
     </script>
-    <script src="assets/qunit.js"></script>
+    <!-- <script src="assets/qunit.js"></script> -->
+    <script src="assets/mocha.js"></script>
     <script src="assets/todos.js"></script>
+    <script src="assets/adapter-qunit.js"></script>
+    <script src="assets/should.js"></script>
+    <script src="assets/sinon.js"></script>
     <script src="testem.js"></script>
     <script>
       require('todos/tests/test-helper');
       require('todos/tests/test-loader');
+
       $('#hide-testing-container').click(function() {
         $('#ember-testing-container').toggleClass('hidden-testing-container');
       });

@@ -3,7 +3,7 @@ import Resolver from 'todos/tests/helpers/resolver';
 
 var App;
 
-module('Acceptances - Todos', {
+suite('Acceptances - Todos', {
   setup: function(){
     var todo = Resolver.resolve('model:todo');
     todo.reopenClass({
@@ -56,113 +56,104 @@ function mock(options) {
 }
 
 test('todos renders', function(){
-  expect(7);
-
   visit('/').then(function(){
-    ok(exists('#new-todo'));
-    ok(exists('#toggle-all'));
+    exists('#new-todo').should.be.ok;
+    exists('#toggle-all').should.be.ok;
 
     var list = find('#todo-list li');
-    equal(list.length, 3);
+   list.length.should.equal(3);
 
-    ok(exists('#todo-count'));
+    exists('#todo-count').should.be.ok;
 
     var linkList = find('#filters li');
-    equal(linkList.length, 3);
+    linkList.length.should.equal(3);
 
-    ok(exists('#clear-completed'));
-    ok(exists('#info'));
+    exists('#clear-completed').should.be.ok;
+    exists('#info').should.be.ok;
   });
 });
 
 test('todos mark last completed', function(){
-  expect(6);
 
   visit('/').then(function(){
-    equal(1, notCompleted().length, 'expected 1 uncompleted');
-    equal(1, remainingCountText());
-    equal(2, completed().length);
+    notCompleted().length.should.equal(1);
+    remainingCountText().should.equal(1);
+    completed().length.should.equal(2);
 
     click(notCompletedSelector).then(function(){
-      equal(0, notCompleted().length, 'expected 0 uncompleted');
-      equal(0, remainingCountText());
-      equal(3, completed().length);
+      notCompleted().length.should.equal(0);
+      remainingCountText().should.equal(0);
+      completed().length.should.equal(3);
     });
   });
 });
 
 test('todos mark one uncompleted', function(){
-  expect(6);
-
   visit('/').then(function(){
-    equal(1, notCompleted().length, 'expected 1 uncompleted');
-    equal(1, remainingCountText());
-    equal(2, completed().length);
+    notCompleted().length.should.equal(1);
+    remainingCountText().should.equal(1);
+    completed().length.should.equal(2);
 
     click(completedSelector + ':first').then(function(){
-      equal(2, notCompleted().length, 'expected 0 uncompleted');
-      equal(2, remainingCountText());
-      equal(1, completed().length);
+      notCompleted().length.should.equal(2);
+      remainingCountText().should.equal(2);
+      completed().length.should.equal(1);
     });
   });
 });
 
 test('clear completed', function(){
-  expect(6);
-
   visit('/').then(function(){
-    equal(1, notCompleted().length, 'expected 1 uncompleted');
-    equal(1, remainingCountText());
-    equal(2, completed().length);
+    notCompleted().length.should.equal(1);
+    remainingCountText().should.equal(1);
+    completed().length.should.equal(2);
 
     click('#clear-completed').then(function(){
-      equal(1, notCompleted().length, 'expected 3 uncompleted');
-      equal(1, remainingCountText());
-      equal(0, completed().length);
+      notCompleted().length.should.equal(1);
+      remainingCountText().should.equal(1);
+      completed().length.should.equal(0);
     });
   });
 });
 
 test("create todo", function(){
-  expect(4);
   visit('/').then(function(){
     fillIn('#new-todo', 'bro');
 
     // insert a newline
     keyEvent('#new-todo', 'keyup', 13).then(function(){
-      equal(2, notCompleted().length, 'expected 1 uncompleted');
-      equal(2, remainingCountText());
-      equal(2, completed().length);
-      equal('bro', $('ul#todo-list li label:last').text());
+      notCompleted().length.should.equal(2);
+      remainingCountText().should.equal(2);
+      completed().length.should.equal(2);
+      $('ul#todo-list li label:last').text().should.equal('bro');
     });
   });
 });
 
 test("remove todo", function(){
-  expect(3);
   visit('/').then(function(){
     click('#todo-list li.completed button.destroy').then(function(){
-      equal(1, notCompleted().length, 'expected 1 uncompleted');
-      equal(1, remainingCountText());
-      equal(0, completed().length);
+      notCompleted().length.should.equal(1);
+      remainingCountText().should.equal(1);
+      completed().length.should.equal(0);
     });
   });
 });
 
 test("edit todo", function(){
-  expect(2);
 
   visit('/').then(function(){
     var todo = $('#todo-list li:first');
 
-    triggerEvent(todo.find('label'), 'dblclick');
+    // TODO: master provides "triggerEvent" helper
+    Ember.run(todo.find('label'), 'trigger', 'dblclick');
 
     var input = todo.find('input.edit');
-    equal(input.length, 1, 'label should have become transformed into input');
+    input.length.should.equal(1);
 
     fillIn(input, 'new task description');
     keyEvent(input.selector, 'keyup', 13).then(function(){
-      equal(todo.find('label').text(), 'new task description');
+      todo.find('label').text().should.equal('new task description');
     });
   });
 });
