@@ -4,7 +4,7 @@
     "handlebars": "~1.3.0",
     "jquery": "^1.11.1",
     "qunit": "~1.12.0",
-    "ember-qunit": "git@github.com:WMeldon/ember-qunit.git#mocha",
+    "ember-qunit": "https://github.com/WMeldon/ember-qunit.git#mocha",
     "ember": "1.5.1",
     "ember-data": "1.0.0-beta.7",
     "ember-resolver": "stefanpenner/ember-jj-abrams-resolver#master",
@@ -15,6 +15,6 @@
     "mocha": "~1.17.0",
     "should": "~3.1.2",
     "sinonjs-built": "~1.7.3",
-    "ember-mocha-adapter": "git@github.com:WMeldon/ember-mocha-adapter.git#qunit"
+    "ember-mocha-adapter": "https://github.com/WMeldon/ember-mocha-adapter.git#qunit"
   }
 }
