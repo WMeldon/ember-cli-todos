@@ -1,10 +1,11 @@
-// routes/todos/active.js
 import Ember from 'ember';
+
 export default Ember.Route.extend({
-  model: function(){
+  model(){
     return this.store.filter('todo', active);
   },
-  renderTemplate: function(controller){
+
+  renderTemplate(controller){
     this.render('todos/index', {controller: controller});
   }
 });

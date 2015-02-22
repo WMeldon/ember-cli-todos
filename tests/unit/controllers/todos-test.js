@@ -1,4 +1,7 @@
-import { moduleFor, test } from 'ember-qunit';
+import {
+  moduleFor,
+  test
+} from 'ember-qunit';
 import Ember from 'ember';
 
 moduleFor('controller:todos', 'Unit - TodosController');
@@ -7,29 +10,29 @@ function mock(properties) {
   return Ember.Object.create(properties || {});
 }
 
-test('inflection', function(){
+test('inflection', function(assert) {
   var controller = this.subject();
 
-  equal(controller.get('inflection'), 'items');
+  assert.equal(controller.get('inflection'), 'items');
 
-  Ember.run(function () {
+  Ember.run(() => {
     controller.pushObject(mock({
       isCompleted: false
     }));
   });
 
-  equal(controller.get('inflection'), 'item');
+  assert.equal(controller.get('inflection'), 'item');
 
-  Ember.run(function () {
+  Ember.run(() => {
     controller.pushObject(mock({
       isCompleted: false
     }));
   });
 
-  equal(controller.get('inflection'), 'items');
+  assert.equal(controller.get('inflection'), 'items');
 });
 
-test('aggregates', function(){
+test('aggregates', function(assert) {
   var todo1 = mock({ isCompleted: false });
   var todo2 = mock({ isCompleted: false });
   var todo3 = mock({ isCompleted: false });
@@ -42,57 +45,57 @@ test('aggregates', function(){
     ]
   });
 
-  deepEqual(controller.get('active'), [todo1, todo2, todo3]);
-  deepEqual(controller.get('completed'), []);
-  equal(controller.get('hasCompleted'), false);
-  equal(controller.get('allAreDone'), false);
+  assert.deepEqual(controller.get('active'), [todo1, todo2, todo3]);
+  assert.deepEqual(controller.get('completed'), []);
+  assert.equal(controller.get('hasCompleted'), false);
+  assert.equal(controller.get('allAreDone'), false);
 
   todo1.set('isCompleted', true);
 
-  deepEqual(controller.get('active'), [todo2, todo3]);
-  deepEqual(controller.get('completed'), [todo1]);
-  equal(controller.get('hasCompleted'), true);
-  equal(controller.get('allAreDone'), false);
+  assert.deepEqual(controller.get('active'), [todo2, todo3]);
+  assert.deepEqual(controller.get('completed'), [todo1]);
+  assert.equal(controller.get('hasCompleted'), true);
+  assert.equal(controller.get('allAreDone'), false);
 
   todo2.set('isCompleted', true);
 
-  deepEqual(controller.get('active'), [todo3]);
-  deepEqual(controller.get('completed'), [todo1, todo2]);
-  equal(controller.get('hasCompleted'), true);
-  equal(controller.get('allAreDone'), false);
+  assert.deepEqual(controller.get('active'), [todo3]);
+  assert.deepEqual(controller.get('completed'), [todo1, todo2]);
+  assert.equal(controller.get('hasCompleted'), true);
+  assert.equal(controller.get('allAreDone'), false);
 
   todo3.set('isCompleted', true);
 
-  deepEqual(controller.get('active'), []);
-  deepEqual(controller.get('completed'), [todo1, todo2, todo3]);
-  equal(controller.get('hasCompleted'), true);
-  equal(controller.get('allAreDone'), true);
+  assert.deepEqual(controller.get('active'), []);
+  assert.deepEqual(controller.get('completed'), [todo1, todo2, todo3]);
+  assert.equal(controller.get('hasCompleted'), true);
+  assert.equal(controller.get('allAreDone'), true);
 });
 
-test('allAreDone: get', function(){
+test('allAreDone: get', function(assert) {
   var controller = this.subject();
   var todo1 = mock();
   var todo2 = mock();
 
-  equal(controller.get('allAreDone'), false);
+  assert.equal(controller.get('allAreDone'), false);
 
   controller.pushObject(todo1);
-  equal(controller.get('allAreDone'), false);
+  assert.equal(controller.get('allAreDone'), false);
 
   controller.pushObject(todo2);
-  equal(controller.get('allAreDone'), false);
+  assert.equal(controller.get('allAreDone'), false);
 
   todo1.set('isCompleted', true);
-  equal(controller.get('allAreDone'), false);
+  assert.equal(controller.get('allAreDone'), false);
 
   todo2.set('isCompleted', true);
-  equal(controller.get('allAreDone'), true);
+  assert.equal(controller.get('allAreDone'), true);
 
   todo2.set('isCompleted', false);
-  equal(controller.get('allAreDone'), false);
+  assert.equal(controller.get('allAreDone'), false);
 });
 
-test('allAreDone: set', function(){
+test('allAreDone: set', function(assert) {
   var todo1 = mock();
   var todo2 = mock();
 
@@ -106,16 +109,16 @@ test('allAreDone: set', function(){
 
   controller.set('allAreDone', true);
 
-  equal(todo1.get('isCompleted'),  true);
-  equal(todo2.get('isCompleted'),  true);
+  assert.equal(todo1.get('isCompleted'),  true);
+  assert.equal(todo2.get('isCompleted'),  true);
 
   controller.set('allAreDone', false);
 
-  equal(todo1.get('isCompleted'), false);
-  equal(todo2.get('isCompleted'), false);
+  assert.equal(todo1.get('isCompleted'), false);
+  assert.equal(todo2.get('isCompleted'), false);
 });
 
-test('actions: createTodo', function(){
+test('actions: createTodo', function(assert) {
   var store, controller;
 
   store = { };
@@ -127,38 +130,38 @@ test('actions: createTodo', function(){
   });
 
   store.createRecord = function(type, data) {
-    equal(type, 'todo');
-    ok(true, 'expected Store#createRecord');
+    assert.equal(type, 'todo');
+    assert.ok(true, 'expected Store#createRecord');
     controller.pushObject(data);
     data.save = function() {
-      ok(true, 'expected Record#save');
+      assert.ok(true, 'expected Record#save');
     };
     return data;
   };
 
   controller.send('createTodo');
 
-  equal(controller.get('newTitle'), "");
-  equal(controller.get('length'), 0);
+  assert.equal(controller.get('newTitle'), "");
+  assert.equal(controller.get('length'), 0);
 
   controller.set('newTitle', 'understanding tests');
 
   controller.send('createTodo');
 
-  equal(controller.get('newTitle'), "");
-  equal(controller.get('length'), 1);
+  assert.equal(controller.get('newTitle'), "");
+  assert.equal(controller.get('length'), 1);
 });
 
-test('actions: clearCompleted', function(){
+test('actions: clearCompleted', function(assert) {
   var controller, todo, todo1, todo2;
   var properties = {
     isCompleted: true,
-    deleteRecord: function() {
-      ok(true, 'expected Record#deleteRecord');
+    deleteRecord() {
+      assert.ok(true, 'expected Record#deleteRecord');
       controller.removeObject(this);
     },
-    save: function() {
-      ok(true, 'expected Record#save');
+    save() {
+      assert.ok(true, 'expected Record#save');
     }
   };
 
@@ -176,9 +179,9 @@ test('actions: clearCompleted', function(){
     ]
   });
 
-  equal(controller.get('length'), 3);
+  assert.equal(controller.get('length'), 3);
 
   controller.send('clearCompleted');
 
-  equal(controller.get('length'), 1);
+  assert.equal(controller.get('length'), 1);
 });

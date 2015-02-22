@@ -26,7 +26,7 @@ export default Ember.ArrayController.extend({
   }.property('@each.isCompleted'),
 
   actions: {
-    createTodo: function () {
+    createTodo() {
       // Get the todo title set by the "New Todo" text field
       var title = this.get('newTitle');
       if (title && !title.trim()) {
@@ -47,7 +47,7 @@ export default Ember.ArrayController.extend({
       todo.save();
     },
 
-    clearCompleted: function () {
+    clearCompleted() {
       var completed = this.get('completed');
 
       completed.toArray(). // clone the array, so it is not bound while we iterate over and delete.

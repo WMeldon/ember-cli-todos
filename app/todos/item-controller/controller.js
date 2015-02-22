@@ -28,15 +28,17 @@ export default Ember.ObjectController.extend({
   isEditing: false,
 
   actions: {
-    editTodo: function () {
+    editTodo() {
       this.set('isEditing', true);
     },
-    removeTodo: function () {
+
+    removeTodo() {
       var todo = this.get('model');
       todo.deleteRecord();
       todo.save();
     },
-    acceptChanges: function () {
+
+    acceptChanges() {
       this.set('isEditing', false);
       this.get('model').save();
     }
