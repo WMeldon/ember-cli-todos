@@ -8,7 +8,11 @@ var notEmpty = Ember.computed.notEmpty;
 export default Ember.ArrayController.extend({
   active:    filterBy('@this', 'isCompleted', false),
   completed: filterBy('@this', 'isCompleted', true),
+  state: 'all',
   hasCompleted: notEmpty('completed.[]'),
+  queryParams: [
+    'state'
+  ],
 
   inflection: function () {
     var active = this.get('active.length');

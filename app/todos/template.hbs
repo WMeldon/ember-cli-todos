@@ -6,8 +6,20 @@
   </header>
 
   <section id='main'>
-    {{outlet}}
-
+    <ul id='todo-list'>
+      {{#each todo in this itemController='todos/item-controller'}}
+        <li {{bind-attr class='todo.isCompleted:completed todo.isEditing:editing'}}>
+          {{#if todo.isEditing}}
+            {{edit-todo class='edit' value=todo.title focus-out='acceptChanges'
+                                     insert-newline='acceptChanges'}}
+          {{else}}
+            {{input type='checkbox' checked=todo.isCompleted class='toggle'}}
+            <label {{action 'editTodo' on='doubleClick'}}>{{todo.title}}</label>
+            <button {{action 'removeTodo'}} class='destroy'></button>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
     {{input type='checkbox' id='toggle-all' checked=allAreDone}}
   </section>
 
@@ -17,13 +29,13 @@
     </span>
     <ul id='filters'>
       <li>
-        {{link-to 'All' 'todos.index' activeClass='selected'}}
+        {{link-to 'All' 'todos' (query-params state='all') activeClass='selected'}}
       </li>
       <li>
-        {{link-to 'Active' 'todos.active' activeClass='selected'}}
+        {{link-to 'Active' 'todos' (query-params state='active') activeClass='selected'}}
       </li>
       <li>
-        {{link-to 'Completed' 'todos.completed' activeClass='selected'}}
+        {{link-to 'Completed' 'todos' (query-params state='completed') activeClass='selected'}}
       </li>
     </ul>
 
